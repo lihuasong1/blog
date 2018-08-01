@@ -1,0 +1,136 @@
+<?php
+
+namespace app\admin\controller;
+
+use think\Controller;
+use think\Request;
+
+class Manager extends Base
+{
+    /**
+     * 显示资源列表
+     *
+     * @return \think\Response
+     */
+    public function index()
+    {
+        $data = request()->param();
+        $info = '';
+        //如果接收到post请求数据，查询一条管理员数据
+        if(request()->isPost()) {
+            $info = \app\admin\model\Manager::where(['username' => $data['name']])->find()->toArray();
+        }
+
+        $list = \app\admin\model\Manager::select();
+
+        //渲染管理员列表
+        return view('index', ['list' => $list, 'info' => $info]);
+    }
+
+    public function refresh() {
+        $data = \app\admin\model\Manager::select();
+        //判断数据查询若是查询失败，查询失败返回错误信息
+        if (!$data) {
+            $res = [
+                'code' => 701,
+                'msg' => '数据查询失败',
+            ];
+            return json($res);
+        }
+
+        //查询成功返回相应数据
+        $res = [
+            'code' => 700,
+            'msg' => '数据查询成功',
+            'data' => $data
+
+        ];
+        return json($res);
+    }
+
+    /**
+     * 显示创建资源表单页.
+     *
+     * @return \think\Response
+     */
+
+
+    public function create()
+    {
+        //
+        return view();
+    }
+
+    /**
+     * 保存新建的资源
+     *
+     * @param  \think\Request  $request
+     * @return \think\Response
+     */
+    public function save(Request $request)
+    {
+        //
+    }
+
+    /**
+     * 显示指定的资源
+     *
+     * @param  int  $id
+     * @return \think\Response
+     */
+    public function edit($id)
+    {
+        dump($id);
+        //渲染修改模版
+        return view('edit');
+    }
+
+    /**
+     * 显示编辑资源表单页.
+     *
+     * @param  int  $id
+     * @return \think\Response
+     */
+    public function editSuccessful($id)
+    {
+        //
+    }
+
+    /**
+     * 保存更新的资源
+     *
+     * @param  \think\Request  $request
+     * @param  int  $id
+     * @return \think\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * 删除指定资源
+     *
+     * @param  int  $id
+     * @return \think\Response
+     */
+    public function delete($id)
+    {
+        //
+    }
+
+    //处理使用ajax方式搜索管理员
+    public function getFindManager() {
+        $data = request()->param();
+//        dump($data);
+//        dump($data['name']);
+
+        $info = \app\admin\model\Manager::where('username', 'like', '%'.$data['name'].'%')->select();
+        $res = [
+            'code' => 700,
+            'msg' => 'success',
+            'data' => $info
+        ];
+        echo json_encode($res);die;
+    }
+}

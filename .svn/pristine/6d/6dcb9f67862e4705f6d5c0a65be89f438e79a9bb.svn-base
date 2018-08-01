@@ -1,0 +1,113 @@
+<?php
+
+namespace app\admin\controller;
+
+use think\Controller;
+use think\Request;
+
+class Manager extends Controller
+{
+    /**
+     * 显示资源列表
+     *
+     * @return \think\Response
+     */
+    public function index()
+    {
+        $data = request()->param();
+        $info = '';
+        //如果接收到post请求数据，查询一条管理员数据
+        if(request()->isPost()) {
+            $info = \app\admin\model\Manager::where(['username' => $data['name']])->find()->toArray();
+        }
+
+        $list = \app\admin\model\Manager::select();
+
+        //渲染管理员列表
+        return view('index', ['list' => $list, 'info' => $info]);
+    }
+
+    /**
+     * 显示创建资源表单页.
+     *
+     * @return \think\Response
+     */
+
+
+    public function create()
+    {
+        //
+        return view();
+    }
+
+    /**
+     * 保存新建的资源
+     *
+     * @param  \think\Request  $request
+     * @return \think\Response
+     */
+    public function save(Request $request)
+    {
+        //
+    }
+
+    /**
+     * 显示指定的资源
+     *
+     * @param  int  $id
+     * @return \think\Response
+     */
+    public function read($id)
+    {
+        //
+    }
+
+    /**
+     * 显示编辑资源表单页.
+     *
+     * @param  int  $id
+     * @return \think\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * 保存更新的资源
+     *
+     * @param  \think\Request  $request
+     * @param  int  $id
+     * @return \think\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * 删除指定资源
+     *
+     * @param  int  $id
+     * @return \think\Response
+     */
+    public function delete($id)
+    {
+        //
+    }
+
+    //处理使用ajax方式搜索管理员
+    public function getFindManager() {
+        $data = request()->param();
+//        dump($data);
+//        dump($data['name']);
+
+        $info = \app\admin\model\Manager::where('username', 'like', $data['name'])->select();
+        $res = [
+            'code' => 700,
+            'msg' => 'success',
+            'data' => $info
+        ];
+        echo json_encode($res);die;
+    }
+}

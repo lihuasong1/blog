@@ -1,0 +1,110 @@
+
+//实现局部刷新
+$('#refresh').click(function() {
+	// alert(123);
+	$.ajax({
+		'url' : '{:url(\'admin/manager/refresh\')}',
+		'type' : 'post',
+		'dataType' : 'json',
+		'success' : function(res) {
+			if (res.code != 700) {
+			    layer.msg('刷新失败');
+			    return;
+			}else {
+				var str = '';
+				var data = res.data;
+			    // layer.msg('123');
+			    // console.log(res.data);
+			    //遍历返回数据写到	html页面
+			    $.each(data, function(i, v) {
+			    	// alert(123);
+			    	str += "<tr>" +
+							"<td><input type=\"checkbox\" name=\"\" lay-skin=\"primary\"  data-id=\"1\"></td>" +
+							"<td class=\"hidden-xs\">"+v.id +"</td>" +
+							"<td class=\"hidden-xs\">"+v.username+"</td>" +
+							"<td class=\"hidden-xs\">127.0.0.1</td>" +
+							"<td class=\"hidden-xs\">1989-10-14</td>" +
+							"<td class=\"hidden-xs\">[编辑]</td>\n" +
+							"<td><button class=\"layui-btn layui-btn-mini layui-btn-normal block\">正常</button></td>" +
+							"<td>" +
+							"<div class=\"layui-inline\">" +
+							"<button class=\"layui-btn layui-btn-small layui-btn-normal  edit-btn\" data-id=\"1\"><i class=\"layui-icon\">&#xe642;</i></button>" +
+							"<button class=\"layui-btn layui-btn-small layui-btn-danger del-btn\" data-id=\"1\"><i class=\"layui-icon\">&#xe640;</i></button>" +
+							"</div>" +
+							"</td>" +
+							"</tr>";
+			    });
+			    //将拼接好的字符串放到html页面
+			    $('#tbody').html(str);
+			}
+		}
+	});
+});
+
+$(function() {
+    //拉黑
+    $('.block').click(function() {
+        var val = $(this).html();
+        if(val == '正常') {
+            $(this).html('拉黑');
+            $(this).removeClass('layui-btn-normal');
+            $(this).addClass('layui-btn-warm');
+        }else {
+            $(this).html('正常');
+            $(this).removeClass('layui-btn-warm');
+            $(this).addClass('layui-btn-normal');
+        }
+    });
+
+//搜索
+$("#search").click(function () {
+	var name = $('form').find("[name=name]").val();
+	//组装json返回数据
+	var data = {
+		"name":name
+	};
+$.ajax({
+	"url" : "{:url('admin/manager/getFindManager')}",
+	"type" : "post",
+	"data" : data,
+	"dataType" : "json",
+	success : function (res) {
+		//如果不等于700返回查询失败
+		if(!res.code == 700 ) {
+			layui.alert('查询失败');
+			return;
+		}else {
+			console.log(res.data);
+			//获取结果
+			var data = res.data;
+			var str = "";
+			$.each(data, function(i, v) {
+				str += "<tr>" +
+					"<td><input type=\"checkbox\" name=\"\" lay-skin=\"primary\"  data-id=\"1\"></td>" +
+					"<td class=\"hidden-xs\">"+v.id +"</td>" +
+					"<td class=\"hidden-xs\">"+v.username+"</td>" +
+					"<td class=\"hidden-xs\">127.0.0.1</td>" +
+					"<td class=\"hidden-xs\">1989-10-14</td>" +
+					"<td class=\"hidden-xs\">[编辑]</td>\n" +
+					"<td><button class=\"layui-btn layui-btn-mini layui-btn-normal block\">正常</button></td>" +
+					"<td>" +
+					"<div class=\"layui-inline\">" +
+					"<button class=\"layui-btn layui-btn-small layui-btn-normal  edit-btn\" data-id=\"1\"><i class=\"layui-icon\">&#xe642;</i></button>" +
+					"<button class=\"layui-btn layui-btn-small layui-btn-danger del-btn\" data-id=\"1\"><i class=\"layui-icon\">&#xe640;</i></button>" +
+					"</div>" +
+					"</td>" +
+					"</tr>";
+				});
+				$('#tbody').html(str);
+			}
+		}
+	});
+});
+
+});
+
+
+// 定义跳转函数
+function editJump() {
+	window.location.href="{:url('admin/manager/edit', 'id='{$v.id})}";
+}

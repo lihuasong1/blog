@@ -1,0 +1,20 @@
+<?php
+namespace app\admin\controller;
+
+use think\Controller;
+
+class Index extends Controller
+{
+    public function index()
+    {
+
+
+        return view();
+    }
+
+    public function welcome() {
+        //当前时间戳
+        $this->assign('time', time());
+        return view();
+    }
+}
